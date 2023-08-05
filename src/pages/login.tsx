@@ -6,24 +6,7 @@ import Link from 'next/link';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import useTranslation from 'next-translate/useTranslation';
 import { parseCookies, destroyCookie } from 'nookies';
-
-
-export async function getServerSideProps(context: any) {
-  const session = await getSession(context);
-
-  if (session) {
-    return {
-      redirect: {
-        destination: '/',
-        permanent: false,
-      },
-    };
-  }
-
-  return {
-    props: {},
-  };
-}
+import axios from 'axios';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -33,43 +16,38 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const { t } = useTranslation('common');
 
+  interface ValidationState {
+    email: any;
+    password: any;
+    // Add other validation properties here if needed
+  }
+
+  const [validate, setValidate] = useState<ValidationState>({
+    email: true,
+    password: true,
+    // Initialize other validation properties if needed
+  });
+
   const router = useRouter();
 
-  const handleSubmit = async (e: FormEvent) => {
-    setShowLoading(true);
+  const loginHandler = async (e: any) => {
     e.preventDefault();
-    const resp = await signIn('credentials', {
-      email,
-      password,
-      callbackUrl: '/',
-      redirect: false,
-    });
 
-    if (resp?.status === 401) {
-      setShowError(true);
-      setShowLoading(false);
-    } else {
-      const cookies = parseCookies();
-      let nextUrl = '/';
+    const formData = new FormData();
 
-      if (cookies.nextSession) {
-        const nextSessionObj = JSON.parse(cookies.nextSession);
-        nextUrl = nextSessionObj.url;
-        destroyCookie(null, 'nextSession');
-      } else {
-        const raw = window.localStorage.getItem('nextSession') ?? '';
+    formData.append('email', email);
+    formData.append('password', password);
 
-        if (raw !== '' && raw !== undefined && raw !== null) {
-          const stored = JSON.parse(raw);
-          if (stored) {
-            nextUrl = String(stored?.url);
-          }
-        } else if (resp?.url) {
-          nextUrl = String(resp?.url);
-        }
-      }
-
-      router.push(nextUrl);
+    try {
+      const response = await axios.post(
+        'http://127.0.0.1:8000/api/auth/login',
+        formData
+      );
+      console.log(response.data.access_token);
+      localStorage.setItem('token', response.data.access_token);
+      router.push('/');
+    } catch (error) {
+      console.error('Error:', error.response.data);
     }
   };
 
@@ -77,14 +55,16 @@ export default function Login() {
     <div className="relative flex items-center justify-center w-full h-screen">
       <div className="relative z-10 flex sm:min-w-[500px] sm:max-w-[500px] min-w-[300px] px-4 py-8 justify-center bg-white rounded-lg shadow-md">
         <div className="flex flex-col flex-1 space-y-4">
-          <h1 className="text-2xl font-semibold text-center text-red-500 ">{t('Login')}</h1>
+          <h1 className="text-2xl font-semibold text-center text-red-500 ">
+            {t('Login')}
+          </h1>
           {showError && (
             <div className="px-8 py-4 mx-10 text-sm text-red-400 bg-red-100 rounded-lg">
               {t('login1')}
             </div>
           )}
           <form
-            onSubmit={handleSubmit}
+            onSubmit={loginHandler}
             className="box-border flex flex-col px-5 space-y-2 sm:px-10 md:space-y-4"
           >
             <div className="items-center justify-center">
@@ -138,7 +118,7 @@ export default function Login() {
             </div>
             <div>
               <button
-                onClick={handleSubmit}
+                onClick={loginHandler}
                 type="submit"
                 className="flex items-center justify-center w-full py-2 mt-3 text-center text-white bg-red-500 rounded-full hover:bg-red-400"
               >
