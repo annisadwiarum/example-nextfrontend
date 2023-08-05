@@ -1,4 +1,4 @@
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { getSession, signIn } from 'next-auth/react';
 import ReactLoading from 'react-loading';
@@ -29,6 +29,12 @@ export default function Login() {
   });
 
   const router = useRouter();
+
+  useEffect(() => {
+    if (localStorage.getItem('token')) {
+      router.push('/');
+    }
+  }, []);
 
   const loginHandler = async (e: any) => {
     e.preventDefault();
