@@ -1,15 +1,13 @@
+'use client';
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
-// import { getSession, signIn } from 'next-auth/react';
 import ReactLoading from 'react-loading';
 import Link from 'next/link';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
-// import Api from '@/helper/api';
-// import { destroyCookie, parseCookies } from 'nookies';
 import useTranslation from 'next-translate/useTranslation';
 import axios from 'axios';
+import { useRouter } from 'next/navigation';
 
-export default function Login({ referral, dialCodeList }: any) {
+export default function Register() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -21,6 +19,7 @@ export default function Login({ referral, dialCodeList }: any) {
   const { t } = useTranslation('common');
   const [showPasswordConfirmation, setShowPasswordConfirmation] =
     useState(false);
+
   interface ValidationState {
     name: any;
     email: any;
@@ -36,28 +35,30 @@ export default function Login({ referral, dialCodeList }: any) {
   });
 
   const router = useRouter();
-   useEffect(() => {
-    if (localStorage.getItem('token')) {
-      router.push('/');
-    }
-  }, []);
+  //  useEffect(() => {
+  //   if (localStorage.getItem('token')) {
+  //     router.push('/');
+  //   }
+  // }, []);
 
   const registerHandler = async (e: any) => {
     e.preventDefault();
 
-    const formData = new FormData();
+    const payload = {
+      name: name,
+      email: email,
+      password: password,
+      password_confirmation: passwordConfirmation,
+    };
 
-    formData.append('name', name);
-    formData.append('email', email);
-    formData.append('password', password);
-    formData.append('password_confirmation', passwordConfirmation);
 
     try {
       const response = await axios.post(
         'http://127.0.0.1:8000/api/auth/register',
-        formData
+        payload
       );
-      router.push('/login');
+      console.log(response.data);
+        router.push('/login');
     } catch (error) {
       console.error('Error:', error.response.data);
     }
@@ -92,8 +93,10 @@ export default function Login({ referral, dialCodeList }: any) {
                     className="w-full pl-4 text-gray-700 placeholder-gray-500 border border-gray-300 rounded-full focus:outline-none "
                   />
                   {validate.name && (
-                    <p className="text-red-500 text-xs mt-1"> Name is required.
-                      { validate.name[0] }
+                    <p className="text-red-500 text-xs mt-1">
+                      {' '}
+                      Name is required.
+                      {validate.name[0]}
                     </p>
                   )}
                 </div>
@@ -111,11 +114,13 @@ export default function Login({ referral, dialCodeList }: any) {
                 type="text"
                 className="w-full pl-4 text-gray-700 placeholder-gray-500 border border-gray-300 rounded-full focus:outline-none"
               />
-                 {validate.email && (
-                    <p className="text-red-500 text-xs mt-1"> Name is required.
-                      {/* { validate.email[0] } */}
-                    </p>
-                  )}
+              {validate.email && (
+                <p className="text-red-500 text-xs mt-1">
+                  {' '}
+                  Name is required.
+                  {/* { validate.email[0] } */}
+                </p>
+              )}
             </div>
             <div className="flex flex-col gap-3 mt-10 md:flex-row">
               <div className="flex-1">
@@ -129,8 +134,10 @@ export default function Login({ referral, dialCodeList }: any) {
                     type={showPassword ? 'text' : 'password'}
                     className="w-full h-full pl-4 text-gray-700 placeholder-gray-500 border-none rounded-full focus:outline-none"
                   />
-                     {validate.password && (
-                    <p className="text-red-500 text-xs mt-1"> Name is required.
+                  {validate.password && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {' '}
+                      Name is required.
                       {/* { validate.password[0] } */}
                     </p>
                   )}

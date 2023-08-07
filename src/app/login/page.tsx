@@ -1,12 +1,12 @@
-import { FormEvent, useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
-import { getSession, signIn } from 'next-auth/react';
+"use client"
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import ReactLoading from 'react-loading';
 import Link from 'next/link';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import useTranslation from 'next-translate/useTranslation';
-import { parseCookies, destroyCookie } from 'nookies';
 import axios from 'axios';
+
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -30,11 +30,11 @@ export default function Login() {
 
   const router = useRouter();
 
-  useEffect(() => {
-    if (localStorage.getItem('token')) {
-      router.push('/');
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (localStorage.getItem('token')) {
+  //     router.push('/');
+  //   }
+  // }, []);
 
   const loginHandler = async (e: any) => {
     e.preventDefault();
@@ -51,7 +51,7 @@ export default function Login() {
       );
       console.log(response.data.access_token);
       localStorage.setItem('token', response.data.access_token);
-      router.push('/');
+      router.push('/presence');
     } catch (error) {
       console.error('Error:', error.response.data);
     }
@@ -59,13 +59,14 @@ export default function Login() {
 
   return (
     <div className="relative flex items-center justify-center w-full h-screen">
+       <div className="absolute inset-0 bg-gradient-to-b from-green-500 via-green-400 to-blue-500 rounded-lg opacity-80"></div>
       <div className="relative z-10 flex sm:min-w-[500px] sm:max-w-[500px] min-w-[300px] px-4 py-8 justify-center bg-white rounded-lg shadow-md">
         <div className="flex flex-col flex-1 space-y-4">
-          <h1 className="text-2xl font-semibold text-center text-red-500 ">
+          <h1 className="text-2xl font-semibold text-center text-green-500 ">
             {t('Login')}
           </h1>
           {showError && (
-            <div className="px-8 py-4 mx-10 text-sm text-red-400 bg-red-100 rounded-lg">
+            <div className="px-8 py-4 mx-10 text-sm text-green-400 bg-red-100 rounded-lg">
               {t('login1')}
             </div>
           )}
@@ -126,7 +127,7 @@ export default function Login() {
               <button
                 onClick={loginHandler}
                 type="submit"
-                className="flex items-center justify-center w-full py-2 mt-3 text-center text-white bg-red-500 rounded-full hover:bg-red-400"
+                className="flex items-center justify-center w-full py-2 mt-3 text-center text-white bg-green-500 rounded-full hover:bg-green-400"
               >
                 {showLoading && (
                   <ReactLoading
