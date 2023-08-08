@@ -37,6 +37,7 @@ export default function Login() {
   // }, []);
 
   const loginHandler = async (e: any) => {
+    setShowLoading(true);
     e.preventDefault();
 
     const formData = new FormData();

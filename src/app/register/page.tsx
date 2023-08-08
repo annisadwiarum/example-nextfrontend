@@ -13,8 +13,8 @@ export default function Register() {
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
   const [showError, setShowError] = useState(false);
-  const [message, setMessage] = useState('');
   const [showLoading, setShowLoading] = useState(false);
+  const [message, setMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const { t } = useTranslation('common');
   const [showPasswordConfirmation, setShowPasswordConfirmation] =
@@ -42,6 +42,7 @@ export default function Register() {
   // }, []);
 
   const registerHandler = async (e: any) => {
+    setShowLoading(true);
     e.preventDefault();
 
     const payload = {
@@ -50,7 +51,6 @@ export default function Register() {
       password: password,
       password_confirmation: passwordConfirmation,
     };
-
 
     try {
       const response = await axios.post(
