@@ -38,7 +38,7 @@ export default function Presence() {
       .then(() => {
         localStorage.removeItem('token');
 
-        router.push('/login');
+        router.push('/presence');
       })
       .catch((error: any) => {
         console.error('Error:', error.response.data);

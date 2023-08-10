@@ -60,14 +60,14 @@ export default function Login() {
 
   return (
     <div className="relative flex items-center justify-center w-full h-screen">
-       <div className="absolute inset-0 bg-gradient-to-b from-green-500 via-green-400 to-blue-500 rounded-lg opacity-80"></div>
+       <div className="absolute inset-0 bg-gradient-to-b from-orange-900 via-lime-800  to-teal-500 opacity-80"></div>
       <div className="relative z-10 flex sm:min-w-[500px] sm:max-w-[500px] min-w-[300px] px-4 py-8 justify-center bg-white rounded-lg shadow-md">
         <div className="flex flex-col flex-1 space-y-4">
-          <h1 className="text-2xl font-semibold text-center text-green-500 ">
+          <h1 className="text-2xl font-semibold text-center text-orange-900 ">
             {t('Login')}
           </h1>
           {showError && (
-            <div className="px-8 py-4 mx-10 text-sm text-green-400 bg-red-100 rounded-lg">
+            <div className="px-8 py-4 mx-10 text-sm text-orange-900 bg-red-100 rounded-lg">
               {t('login1')}
             </div>
           )}
@@ -84,7 +84,7 @@ export default function Login() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   type="text"
-                  className="w-full pl-4 text-gray-700 placeholder-gray-500 border border-gray-300 rounded-full md:font-xs text focus:outline-none"
+                  className="w-full pl-4 text-gray-700 placeholder-gray-500 border h-10 border-gray-300 rounded-full md:font-xs text focus:outline-none"
                 />
               </div>
             </div>
@@ -95,7 +95,7 @@ export default function Login() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   type={showPassword ? 'text' : 'password'}
-                  className="w-full h-full pl-4 text-gray-700 placeholder-gray-500 border-none rounded-full focus:outline-none"
+                  className="w-full pl-4 text-gray-700 placeholder-gray-500 h-10 border-none rounded-full focus:outline-none"
                 />
                 <button
                   type="button"
@@ -128,7 +128,7 @@ export default function Login() {
               <button
                 onClick={loginHandler}
                 type="submit"
-                className="flex items-center justify-center w-full py-2 mt-3 text-center text-white bg-green-500 rounded-full hover:bg-green-400"
+                className="flex items-center justify-center w-full py-2 mt-3 text-center text-white bg-orange-900 rounded-full hover:bg-orange-800"
               >
                 {showLoading && (
                   <ReactLoading
